@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for twitter/routes/tweets.js</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">all files</a> / <a href="index.html">twitter/routes/</a> tweets.js
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">73.68% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>28/38</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">62.5% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>10/16</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">71.43% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>5/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">73.68% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>28/38</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line medium'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">4×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">var express = require('express');
+var router = express.Router();
+var db = require('../db/mongo')
+&nbsp;
+/* GET users listing. */
+router.get('/', function(req, res, next) {
+  var id = req.headers.id
+  var page = 0
+  var pagelen =  10
+  if (req.query.page)
+      page = req.query.page
+  if(req.query.getAll){
+    db.get('tweets').find().skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
+        var data = {tweets:tweets}
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (tweets.length ===10)
+          data.hasnext = true
+        res.json(data)
+      })
+  }else if (req.query.hash){
+    db.get('tweets').find({hash:{$in:["#"+req.query.hash]}}).skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
+        var data = {tweets:tweets}
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (tweets.length ===10)
+<span class="cstat-no" title="statement not covered" >          data.hasnext = true</span>
+        res.json(data)
+      })
+  }else{
+    
+    db.get('users').find({username:id}).limit(pagelen).toArray().then(function(userdocs){
+      <span class="missing-if-branch" title="else path not taken" >E</span>if(userdocs[0].follow){
+        db.get('tweets').find({owner:{$in:userdocs[0].follow}}).skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
+          var data = {tweets:tweets}
+          <span class="missing-if-branch" title="if path not taken" >I</span>if (tweets.length ===10)
+<span class="cstat-no" title="statement not covered" >            data.hasnext = true</span>
+          res.json(data)
+        })
+      }else{
+<span class="cstat-no" title="statement not covered" >        res.json({tweets:[]})</span>
+      }
+    })
+  }
+});
+&nbsp;
+/* POST users listing. */
+router.post('/', <span class="fstat-no" title="function not covered" >function(req, res, next) {</span>
+<span class="cstat-no" title="statement not covered" >  var msg = req.body.msg</span>
+<span class="cstat-no" title="statement not covered" >  var id = req.headers.id</span>
+<span class="cstat-no" title="statement not covered" >  var obj = {owner:id,msg:msg,hash:str.match(/#\w+/g),users:str.match(/@\w+/g),time:Date()}</span>
+<span class="cstat-no" title="statement not covered" >  db.get('tweets').insertOne(obj,<span class="fstat-no" title="function not covered" >function(err,result){</span></span>
+<span class="cstat-no" title="statement not covered" >    if (err)</span>
+<span class="cstat-no" title="statement not covered" >      res.json({error:'Error while creating token in DB'})</span>
+<span class="cstat-no" title="statement not covered" >    res.json({tweetid:result.insertedId})</span>
+  })
+});
+&nbsp;
+module.exports = router;
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Aug 11 2016 01:54:08 GMT-0400 (EDT)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

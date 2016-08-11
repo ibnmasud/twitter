@@ -16,7 +16,8 @@ var tokenValidator = function(req,res,cb){
             }
         })
     }else{
-        res.json({error:"Missing Data"})
+        res.sendStatus(404)
+        //res.json({error:"Missing Data"})
     }
 }
 module.exports = function(req,res,next){

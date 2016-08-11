@@ -5,16 +5,11 @@ var uuid = require('node-uuid');
 var db = require('../db/mongo')
 
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
-
 /* Follow. */
 router.post('/follow/', function(req, res, next) {
   var user = req.body.user
   var id = req.headers.id
-  if (user!=='' && user!==id){
+  if (user && user!=='' && user!==id){
     db.get("users").find({username:user}).limit(1).toArray().then(function(docs){
       if(docs.length === 1){
         db.get("users").find({username:id}).limit(1).toArray().then(function(userdocs){
@@ -47,7 +42,7 @@ router.post('/follow/', function(req, res, next) {
 router.post('/unfollow/', function(req, res, next) {
   var user = req.body.user
   var id = req.headers.id
-  if (user!=='' && user!==id){
+  if (user && user!=='' && user!==id){
     db.get("users").find({username:id}).limit(1).toArray().then(function(userdocs){
       if(userdocs.length === 1){
         if(userdocs[0].follow){
@@ -74,7 +69,7 @@ router.post('/unfollow/', function(req, res, next) {
 router.post('/login/', function(req, res, next) {
   var username = req.body.username
   var password = md5(req.body.password)
-  if (username!=='' && req.body.password!==''){
+  if (username && req.body.password && username!=='' && req.body.password!==''){
     db.get("users").find({username:username}).limit(1).toArray().then(function(docs){
       if(docs.length === 1 && docs[0].password === password){
           //res.json({error:"Userid is taken"})
@@ -98,7 +93,7 @@ router.post('/register/', function(req, res, next) {
   //res.json(req.body);
   var username = req.body.username
   var password = md5(req.body.password)
-  if (username!=='' && req.body.password!==''){
+  if (username && req.body.password && username!=='' && req.body.password!==''){
     db.get("users").find({username:username}).limit(1).toArray().then(function(docs){
       if(docs.length === 1){
           res.json({error:"Userid is taken"})

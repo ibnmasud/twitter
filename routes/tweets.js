@@ -7,23 +7,24 @@ router.get('/', function(req, res, next) {
   var id = req.headers.id
   var page = 0
   var pagelen =  10
-  if(req.body.getAll){
+  if (req.query.page)
+      page = req.query.page
+  if(req.query.getAll){
     db.get('tweets').find().skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
         var data = {tweets:tweets}
         if (tweets.length ===10)
           data.hasnext = true
         res.json(data)
       })
-  }else if (req.body.hash){
-    db.get('tweets').find({hash:{$in:[req.body.hash]}}).skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
+  }else if (req.query.hash){
+    db.get('tweets').find({hash:{$in:["#"+req.query.hash]}}).skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
         var data = {tweets:tweets}
         if (tweets.length ===10)
           data.hasnext = true
         res.json(data)
       })
   }else{
-    if (req.body.page)
-      page = req.body.page
+    
     db.get('users').find({username:id}).limit(pagelen).toArray().then(function(userdocs){
       if(userdocs[0].follow){
         db.get('tweets').find({owner:{$in:userdocs[0].follow}}).skip(page*pagelen).limit(pagelen).sort({time:-1}).toArray().then(function(tweets){
