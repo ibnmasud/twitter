@@ -15,9 +15,9 @@ router.post('/follow/', function(req, res, next) {
   var user = req.body.user
   var id = req.headers.id
   if (user!=='' && user!==id){
-    db.get().collection("users").find({username:user}).limit(1).toArray().then(function(docs){
+    db.get("users").find({username:user}).limit(1).toArray().then(function(docs){
       if(docs.length === 1){
-        db.get().collection("users").find({username:id}).limit(1).toArray().then(function(userdocs){
+        db.get("users").find({username:id}).limit(1).toArray().then(function(userdocs){
           if(userdocs.length === 1){
             if(userdocs[0].follow){
               if (userdocs[0].follow.indexOf(user)===-1)
@@ -25,7 +25,7 @@ router.post('/follow/', function(req, res, next) {
             }else{
               userdocs[0].follow=[user]
             }
-            db.get().collection("users").replaceOne({username:id},userdocs[0],function(err,results){
+            db.get("users").replaceOne({username:id},userdocs[0],function(err,results){
               if(err)
                 res.json({error:"Error while updating user follows in DB"})
               res.json({follow:userdocs[0].follow})
@@ -48,7 +48,7 @@ router.post('/unfollow/', function(req, res, next) {
   var user = req.body.user
   var id = req.headers.id
   if (user!=='' && user!==id){
-    db.get().collection("users").find({username:id}).limit(1).toArray().then(function(userdocs){
+    db.get("users").find({username:id}).limit(1).toArray().then(function(userdocs){
       if(userdocs.length === 1){
         if(userdocs[0].follow){
           var pos = userdocs[0].follow.indexOf(user);
@@ -56,7 +56,7 @@ router.post('/unfollow/', function(req, res, next) {
             userdocs[0].follow.splice(pos, 1);
           }
         }
-        db.get().collection("users").replaceOne({username:id},userdocs[0],function(err,results){
+        db.get("users").replaceOne({username:id},userdocs[0],function(err,results){
           if(err)
             res.json({error:"Error while updating user follows in DB"})
           res.json({follow:userdocs[0].follow})
@@ -75,11 +75,11 @@ router.post('/login/', function(req, res, next) {
   var username = req.body.username
   var password = md5(req.body.password)
   if (username!=='' && req.body.password!==''){
-    db.get().collection("users").find({username:username}).limit(1).toArray().then(function(docs){
+    db.get("users").find({username:username}).limit(1).toArray().then(function(docs){
       if(docs.length === 1 && docs[0].password === password){
           //res.json({error:"Userid is taken"})
           var token = uuid.v4()
-          db.get().collection("tokens").insertOne({id:username,token:token,date:Date.now()},function(err,result){
+          db.get("tokens").insertOne({id:username,token:token,date:Date.now()},function(err,result){
             if (err)
               res.json({error:"Error while creating token in DB"})
             res.json({token:token})
@@ -99,11 +99,11 @@ router.post('/register/', function(req, res, next) {
   var username = req.body.username
   var password = md5(req.body.password)
   if (username!=='' && req.body.password!==''){
-    db.get().collection("users").find({username:username}).limit(1).toArray().then(function(docs){
+    db.get("users").find({username:username}).limit(1).toArray().then(function(docs){
       if(docs.length === 1){
           res.json({error:"Userid is taken"})
       }else{
-          db.get().collection("users").insertOne({username:username,password:password},function(err,result){
+          db.get("users").insertOne({username:username,password:password},function(err,result){
             if (err)
               res.json({error:"Error while inserting to DB"})
             res.json({id:result.insertedId})
