@@ -1,0 +1,6 @@
+{
+    "mongodb":{
+        "url":"mongodb://localhost:27017/twitter"
+    },
+    "ignoreRoutes":["/users/register","/users/login"]
+}
