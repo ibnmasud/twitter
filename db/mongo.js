@@ -14,8 +14,12 @@ exports.connect = function(url, done) {
   })
 }
 
-exports.get = function() {
-  return state.db
+exports.get = function(collection) {
+  if(collection){
+    return state.db.collection(collection)
+  }else{
+    return state.db
+  }
 }
 
 exports.close = function(done) {

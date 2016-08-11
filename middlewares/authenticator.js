@@ -8,7 +8,7 @@ var tokenValidator = function(req,res,cb){
     if(ignoreRoutes.indexOf(req.path)>=0){
         cb()
     }else if(token && id){
-        db.get().collection('tokens').find({"token":token}).limit(1).toArray().then(function(docs){
+        db.get('tokens').find({"token":token}).limit(1).toArray().then(function(docs){
             if(docs.length === 0 || id != docs[0].id){
                 res.json({error:"Invalid Token"})
             }else{
